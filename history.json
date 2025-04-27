@@ -1,37 +1,47 @@
 [
   {
-    "activity_name": "Table Tennis",
-    "date": "2025-06-06",
-    "cost_per_person": 0
+    "activity_name": "Pottery",
+    "date": "2025-04-27",
+    "cost_per_person": 1200
   },
   {
-    "activity_name": "Skribbl",
-    "date": "2025-06-06",
+    "activity_name": "Cooking",
+    "date": "2025-04-27",
+    "cost_per_person": 100
+  },
+  {
+    "activity_name": "Painting On Canvas",
+    "date": "2025-04-27",
+    "cost_per_person": 50
+  },
+  {
+    "activity_name": "Arcade",
+    "date": "2025-04-27",
+    "cost_per_person": 300
+  },
+  {
+    "activity_name": "Hiking",
+    "date": "2025-04-27",
     "cost_per_person": 0.0
-  },
-  {
-    "activity_name": "Coloring",
-    "date": "2025-06-06",
-    "cost_per_person": 0
-  },
-  {
-    "activity_name": "Bar Crawl",
-    "date": "2025-06-06",
-    "cost_per_person": 900
-  },
-  {
-    "activity_name": "Bowling",
-    "date": "2025-06-06",
-    "cost_per_person": 206.0
-  },
-  {
-    "activity_name": "Bowling",
-    "date": "2025-06-06",
-    "cost_per_person": 206.0
   },
   {
     "activity_name": "Jogging",
-    "date": "2025-06-06",
+    "date": "2025-04-27",
     "cost_per_person": 0.0
+  },
+  {
+    "activity_name": "Karaoke @ Home",
+    "date": "2025-04-27",
+    "cost_per_person": 0.0
+  },
+  {
+    "activity_name": "Karaoke @ Home",
+    "date": "2025-04-27",
+    "cost_per_person": 0.0
+  },
+  {
+    "activity_name": "Painting Bottles",
+    "date": "2025-04-27",
+    "cost_per_person": 30
   }
 ]
