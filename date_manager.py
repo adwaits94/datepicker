@@ -37,8 +37,64 @@ class DateIdeaManager:
         self.history.clear()
 
     def analyze(self):
-        # Example: count how many times each idea was used
-        stats = {}
+        """
+        Returns analysis of history:
+        - Count by idea
+        - Count by liked_by (bf/gf)
+        - Count by location (home/outside)
+        - Count by tag
+        - Suggestions for balancing
+        """
+        # Collect all possible values from self.ideas
+        all_liked_by = set()
+        all_locations = set()
+        all_tags = set()
+        all_ideas = set()
+        for idea in self.ideas:
+            all_ideas.add(idea.name)
+            all_liked_by.update(idea.liked_by)
+            all_locations.update(idea.location)
+            all_tags.update(idea.tags)
+        stats = {
+            'by_idea': {name: 0 for name in all_ideas},
+            'by_liked_by': {person: 0 for person in all_liked_by},
+            'by_location': {loc: 0 for loc in all_locations},
+            'by_tag': {tag: 0 for tag in all_tags},
+            'total': 0
+        }
         for entry in self.history.get_history():
-            stats[entry['activity_name']] = stats.get(entry['activity_name'], 0) + 1
+            idea = next((i for i in self.ideas if i.name == entry['activity_name']), None)
+            if not idea:
+                continue
+            # By idea
+            stats['by_idea'][idea.name] += 1
+            # By liked_by
+            for person in idea.liked_by:
+                stats['by_liked_by'][person] += 1
+            # By location
+            for loc in idea.location:
+                stats['by_location'][loc] += 1
+            # By tag
+            for tag in idea.tags:
+                stats['by_tag'][tag] += 1
+            stats['total'] += 1
+        # Suggestions for balancing
+        suggestions = []
+        # Suggest all attributes with the minimum count (ties included), consolidated by attribute
+        if stats['by_location'] and len(stats['by_location']) > 1:
+            min_count = min(stats['by_location'].values())
+            min_locs = [loc for loc, count in stats['by_location'].items() if count == min_count]
+            if min_locs:
+                suggestions.append(f"Try more activities at: {', '.join(min_locs)}")
+        if stats['by_liked_by'] and len(stats['by_liked_by']) > 1:
+            min_count = min(stats['by_liked_by'].values())
+            min_people = [person for person, count in stats['by_liked_by'].items() if count == min_count]
+            if min_people:
+                suggestions.append(f"Try more activities liked by: {', '.join(min_people)}")
+        if stats['by_tag'] and len(stats['by_tag']) > 1:
+            min_count = min(stats['by_tag'].values())
+            min_tags = [tag for tag, count in stats['by_tag'].items() if count == min_count]
+            if min_tags:
+                suggestions.append(f"Try more activities with tag: {', '.join(min_tags)}")
+        stats['suggestions'] = suggestions
         return stats
