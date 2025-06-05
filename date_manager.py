@@ -18,10 +18,7 @@ class DateIdeaManager:
         if liked_by:
             filtered = [i for i in filtered if liked_by in i.liked_by]
         if location:
-            # Accept both 'indoor'/'home' and 'outdoor'/'outside' for compatibility
-            location_map = {"indoor": "home", "outdoor": "outside", "home": "home", "outside": "outside"}
-            mapped_location = location_map.get(location, location)
-            filtered = [i for i in filtered if mapped_location in i.location]
+            filtered = [i for i in filtered if location in i.location]
         if not filtered:
             return None
         return random.choice(filtered)
