@@ -1,0 +1,212 @@
+[
+  {
+    "name": "Movie @ Home",
+    "liked_by": ["bf", "gf"],
+    "location": ["home"],
+    "tags": ["relaxing"]
+  },
+  {
+    "name": "Movie @ Theater",
+    "liked_by": ["bf"],
+    "location": ["outside"],
+    "tags": []
+  },
+  {
+    "name": "Hiking",
+    "liked_by": ["bf"],
+    "location": ["home"],
+    "tags": ["adventure", "active", "fitness"]
+  },
+  {
+    "name": "Swimming",
+    "liked_by": ["gf"],
+    "location": ["outside"],
+    "tags": ["active", "fitness"]
+  },
+  {
+    "name": "Lego Building",
+    "liked_by": ["gf"],
+    "location": ["outside"],
+    "tags": ["creative"]
+  },
+  {
+    "name": "Mystery Room",
+    "liked_by": ["bf", "gf"],
+    "location": ["outside"],
+    "tags": ["creative", "puzzle"]
+  },
+  {
+    "name": "Lifting",
+    "liked_by": ["bf"],
+    "location": ["outside"],
+    "tags": ["active", "fitness"]
+  },
+  {
+    "name": "Jogging",
+    "liked_by": ["bf"],
+    "location": ["outside"],
+    "tags": ["fitness", "active"]
+  },
+  {
+    "name": "Badminton",
+    "liked_by": ["bf"],
+    "location": ["outside"],
+    "tags": ["fitness", "active", "game"]
+  },
+  {
+    "name": "Table Tennis",
+    "liked_by": ["bf"],
+    "location": ["outside"],
+    "tags": ["active", "game"]
+  },
+  {
+    "name": "Pool",
+    "liked_by": ["bf"],
+    "location": ["outside"],
+    "tags": ["active"]
+  },
+  {
+    "name": "Arcade",
+    "liked_by": ["bf", "gf"],
+    "location": ["outside"],
+    "tags": ["game"]
+  },
+  {
+    "name": "Video Games",
+    "liked_by": ["bf", "gf"],
+    "location": ["home"],
+    "tags": ["game"]
+  },
+  {
+    "name": "Pottery",
+    "liked_by": ["gf"],
+    "location": ["outside"],
+    "tags": ["creative"]
+  },
+  {
+    "name": "Climbing",
+    "liked_by": ["gf"],
+    "location": ["outside"],
+    "tags": ["active"]
+  },
+  {
+    "name": "Amusement Park",
+    "liked_by": ["gf"],
+    "location": ["outside"],
+    "tags": ["adventure"]
+  },
+  {
+    "name": "Water Park",
+    "liked_by": ["gf"],
+    "location": ["outside"],
+    "tags": ["adventure"]
+  },
+  {
+    "name": "Karaoke @ Home",
+    "liked_by": ["gf"],
+    "location": ["home"],
+    "tags": ["music"]
+  },
+  {
+    "name": "Cooking",
+    "liked_by": ["bf", "gf"],
+    "location": ["home"],
+    "tags": ["creative"]
+  },
+  {
+    "name": "Board Games",
+    "liked_by": ["bf", "gf"],
+    "location": ["home", "outside"],
+    "tags": ["game"]
+  },
+  {
+    "name": "Bar Crawl",
+    "liked_by": ["bf", "gf"],
+    "location": ["outside"],
+    "tags": ["Food & Drink"]
+  },
+  {
+    "name": "Clubbing",
+    "liked_by": ["gf"],
+    "location": ["outside"],
+    "tags": []
+  },
+  {
+    "name": "Sightseeing",
+    "liked_by": ["bf", "gf"],
+    "location": ["outside"],
+    "tags": ["adventure"]
+  },
+  {
+    "name": "Painting On Canvas",
+    "liked_by": ["gf"],
+    "location": ["home"],
+    "tags": ["creative"]
+  },
+  {
+    "name": "Shopping",
+    "liked_by": ["bf"],
+    "location": ["outside"],
+    "tags": []
+  },
+  {
+    "name": "Laser Tag",
+    "liked_by": ["bf", "gf"],
+    "location": ["outside"],
+    "tags": ["game", "active"]
+  },
+  {
+    "name": "Skribbl",
+    "liked_by": ["bf", "gf"],
+    "location": ["home"],
+    "tags": ["game", "creative"]
+  },
+  {
+    "name": "Painting Bottles",
+    "liked_by": ["bf", "gf"],
+    "location": ["home"],
+    "tags": ["creative"]
+  },
+  {
+    "name": "Coloring",
+    "liked_by": ["gf"],
+    "location": ["home"],
+    "tags": ["creative"]
+  },
+  {
+    "name": "Paintball",
+    "liked_by": ["gf", "bf"],
+    "location": ["outside"],
+    "tags": ["game", "active"]
+  },
+  {
+    "name": "Comedy Show",
+    "liked_by": ["gf"],
+    "location": ["outside"],
+    "tags": []
+  },
+  {
+    "name": "New Restaurant",
+    "liked_by": ["bf"],
+    "location": ["outside"],
+    "tags": ["Food & Drink"]
+  },
+  {
+    "name": "Karaoke @ Bar",
+    "liked_by": ["bf"],
+    "location": ["outside"],
+    "tags": ["music"]
+  },
+    {
+        "name": "Spa Day",
+        "liked_by": ["gf"],
+        "location": ["outside"],
+        "tags": ["relaxing"]
+    },
+    {
+        "name": "Bowling",
+        "liked_by": ["bf", "gf"],
+        "location": ["outside"],
+        "tags": ["game"]
+    }
+]
