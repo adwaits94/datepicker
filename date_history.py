@@ -16,3 +16,7 @@ class DateHistory:
 
     def get_history(self):
         return self.history
+
+    def clear(self):
+        """Clears the history list."""
+        self.history.clear()

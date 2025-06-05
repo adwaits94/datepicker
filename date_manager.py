@@ -32,6 +32,10 @@ class DateIdeaManager:
             raise ValueError("Expected a DateIdea instance")
         self.history.add_entry(idea.name, date)  # Date is optional, will use current date if None
 
+    def clear_history(self):
+        """Clears the date history."""
+        self.history.clear()
+
     def analyze(self):
         # Example: count how many times each idea was used
         stats = {}
