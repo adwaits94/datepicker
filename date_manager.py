@@ -26,8 +26,11 @@ class DateIdeaManager:
             return None
         return random.choice(filtered)
 
-    def record_date(self, idea: DateIdea):
-        self.history.add_entry(idea.name)
+    def record_date(self, idea: DateIdea, date=None):
+        """ Records a date idea in the history. """
+        if not isinstance(idea, DateIdea):
+            raise ValueError("Expected a DateIdea instance")
+        self.history.add_entry(idea.name, date)  # Date is optional, will use current date if None
 
     def analyze(self):
         # Example: count how many times each idea was used
