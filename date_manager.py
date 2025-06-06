@@ -135,10 +135,12 @@ class DateIdeaManager:
             idea = idea_by_name.get(entry['activity_name'])
             if not idea:
                 continue
+            # Instead of entry['activity_name'] + entry['date'], use a tuple:
+            date_key = (entry['activity_name'], entry['date'])
             if 'bf' in idea.liked_by:
-                bf_set.add(entry['activity_name'] + entry['date'])
+                bf_set.add(date_key)
             if 'gf' in idea.liked_by:
-                gf_set.add(entry['activity_name'] + entry['date'])
+                gf_set.add(date_key)
         plt.figure(figsize=(6, 6))
         venn2((bf_set, gf_set), set_labels=('bf', 'gf'))
         plt.title('Percent of Dates Liked by bf, gf, and Both')

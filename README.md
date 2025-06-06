@@ -37,3 +37,6 @@ print(idea)
 ## Future
 - Android app integration (Kivy, BeeWare, or REST API)
 - More advanced analysis and filtering
+- Graph for home/outside
+- Fix Edit/View Date Idea screen
+- Share and persist sessions between bf and gf

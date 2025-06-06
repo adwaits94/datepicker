@@ -1,1 +1,37 @@
-[]
+[
+  {
+    "activity_name": "Table Tennis",
+    "date": "2025-06-06",
+    "cost_per_person": 0
+  },
+  {
+    "activity_name": "Skribbl",
+    "date": "2025-06-06",
+    "cost_per_person": 0.0
+  },
+  {
+    "activity_name": "Coloring",
+    "date": "2025-06-06",
+    "cost_per_person": 0
+  },
+  {
+    "activity_name": "Bar Crawl",
+    "date": "2025-06-06",
+    "cost_per_person": 900
+  },
+  {
+    "activity_name": "Bowling",
+    "date": "2025-06-06",
+    "cost_per_person": 206.0
+  },
+  {
+    "activity_name": "Bowling",
+    "date": "2025-06-06",
+    "cost_per_person": 206.0
+  },
+  {
+    "activity_name": "Jogging",
+    "date": "2025-06-06",
+    "cost_per_person": 0.0
+  }
+]
