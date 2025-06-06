@@ -159,9 +159,13 @@ class AddIdeaScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.manager_app = None
+        # Use a ScrollView to make the form scrollable and prevent overlap
         self.layout = BoxLayout(orientation='vertical', spacing=10, padding=20)
+        self.scroll = ScrollView(size_hint=(1, 1))
+        from kivy.uix.gridlayout import GridLayout
+        self.form = GridLayout(cols=2, spacing=5, size_hint_y=None, padding=[0, 0, 0, 20])
+        self.form.height = 7 * 50  # 7 rows, 50px each (approximate)
         from kivy.uix.spinner import Spinner
-        self.form = GridLayout(cols=2, spacing=5, size_hint_y=None)
         self.name_input = TextInput(hint_text='Name', multiline=False, size_hint_y=None, height=40)
         self.liked_by_spinner = Spinner(text='Select', values=['bf', 'gf', 'both'], size_hint_y=None, height=40)
         self.location_spinner = Spinner(text='Select', values=['home', 'outside', 'both'], size_hint_y=None, height=40)
@@ -183,9 +187,15 @@ class AddIdeaScreen(Screen):
         self.form.add_widget(self.max_people_input)
         self.form.add_widget(Label(text='Cost Type:'))
         self.form.add_widget(self.cost_type_spinner)
-        self.layout.add_widget(self.form)
-        self.save_btn = Button(text='Save Idea', size_hint_y=None, height=50, on_press=self.on_save)
-        self.layout.add_widget(self.save_btn)
+        self.scroll.add_widget(self.form)
+        self.layout.add_widget(self.scroll)
+        # Add Save and Cancel buttons in a horizontal BoxLayout
+        btn_layout = BoxLayout(orientation='horizontal', size_hint_y=None, height=50, spacing=10)
+        self.save_btn = Button(text='Save Idea', on_press=self.on_save)
+        self.cancel_btn = Button(text='Cancel', on_press=self.on_cancel)
+        btn_layout.add_widget(self.save_btn)
+        btn_layout.add_widget(self.cancel_btn)
+        self.layout.add_widget(btn_layout)
         self.status_label = Label(text='', size_hint_y=None, height=40)
         self.layout.add_widget(self.status_label)
         self.add_widget(self.layout)
@@ -239,6 +249,9 @@ class AddIdeaScreen(Screen):
         self.liked_by_spinner.text = 'Select'
         self.location_spinner.text = 'Select'
         self.cost_type_spinner.text = 'total'
+
+    def on_cancel(self, instance):
+        self.manager.current = 'main'
 
 class HistoryScreen(Screen):
     def __init__(self, **kwargs):
@@ -356,31 +369,59 @@ class VisualizationsScreen(Screen):
         super().__init__(**kwargs)
         self.manager_app = None
         self.layout = BoxLayout(orientation='vertical', spacing=10, padding=20)
-        self.image_box = BoxLayout(orientation='vertical', size_hint_y=0.9)
+        self.image_box = BoxLayout(orientation='vertical', size_hint_y=0.7)
         self.layout.add_widget(self.image_box)
+        # Navigation buttons
+        nav_layout = BoxLayout(orientation='horizontal', size_hint_y=None, height=50, spacing=10)
+        self.prev_btn = Button(text='Previous', on_press=self.on_prev)
+        self.next_btn = Button(text='Next', on_press=self.on_next)
+        nav_layout.add_widget(self.prev_btn)
+        nav_layout.add_widget(self.next_btn)
+        self.layout.add_widget(nav_layout)
         self.refresh_btn = Button(text='Refresh Visualizations', size_hint_y=None, height=50, on_press=self.on_refresh)
         self.layout.add_widget(self.refresh_btn)
         self.back_btn = Button(text='Back', size_hint_y=None, height=50, on_press=self.go_back)
         self.layout.add_widget(self.back_btn)
         self.add_widget(self.layout)
+        self.img_paths = []
+        self.current_index = 0
 
     def on_enter(self):
         app = App.get_running_app()
         self.manager_app = getattr(app, 'manager', None)
         self.show_visualizations()
 
-    def on_refresh(self, instance):
+    def on_refresh(self, instance=None):
         self.show_visualizations()
 
     def show_visualizations(self):
+        self.img_paths = self.generate_and_save_visualizations()
+        self.current_index = 0
+        self.update_image()
+
+    def update_image(self):
         self.image_box.clear_widgets()
-        if not self.manager_app or not hasattr(self.manager_app, 'history') or not hasattr(self.manager_app, 'ideas'):
-            self.image_box.add_widget(Label(text='Error: Manager not loaded.'))
+        if not self.img_paths:
+            self.image_box.add_widget(Label(text='No visualizations available.'))
+            self.prev_btn.disabled = True
+            self.next_btn.disabled = True
             return
-        img_paths = self.generate_and_save_visualizations()
-        for img_path in img_paths:
-            if os.path.exists(img_path):
-                self.image_box.add_widget(Image(source=img_path, allow_stretch=True, keep_ratio=True))
+        img_path = self.img_paths[self.current_index]
+        if os.path.exists(img_path):
+            self.image_box.add_widget(Image(source=img_path, allow_stretch=True, keep_ratio=True))
+        # Update button states
+        self.prev_btn.disabled = self.current_index == 0
+        self.next_btn.disabled = self.current_index == len(self.img_paths) - 1
+
+    def on_prev(self, instance):
+        if self.current_index > 0:
+            self.current_index -= 1
+            self.update_image()
+
+    def on_next(self, instance):
+        if self.current_index < len(self.img_paths) - 1:
+            self.current_index += 1
+            self.update_image()
 
     def generate_and_save_visualizations(self):
         import matplotlib.pyplot as plt
@@ -395,19 +436,19 @@ class VisualizationsScreen(Screen):
             return []
         idea_by_name = {idea.name: idea for idea in self.manager_app.ideas}
         img_paths = []
-        # 1. Bar chart: Number of times each activity was done
+        # 1. Bar chart: Number of times each activity was done (horizontal)
         activity_counts = Counter(entry['activity_name'] for entry in history)
         activities, counts = zip(*sorted(activity_counts.items(), key=lambda x: x[1], reverse=True)) if activity_counts else ([],[])
         if activities:
-            plt.figure(figsize=(8, 4))
-            plt.bar(activities, counts, color='skyblue')
+            plt.figure(figsize=(5, max(3, len(activities)*0.6)))
+            plt.barh(activities, counts, color='skyblue')
             plt.title('Number of Times Each Activity Was Done')
-            plt.ylabel('Count')
-            plt.xticks(rotation=45, ha='right')
-            plt.gca().yaxis.set_major_locator(ticker.MaxNLocator(integer=True))
+            plt.xlabel('Count')
+            plt.ylabel('Activity')
+            plt.gca().xaxis.set_major_locator(ticker.MaxNLocator(integer=True))
             plt.tight_layout()
             img1 = 'activity_counts.png'
-            plt.savefig(img1)
+            plt.savefig(img1, bbox_inches='tight')
             plt.close()
             img_paths.append(img1)
         # 2. Venn Diagram: Percent of dates liked by bf, gf, both
@@ -425,10 +466,10 @@ class VisualizationsScreen(Screen):
             venn2((bf_set, gf_set), set_labels=('bf', 'gf'))
             plt.title('Percent of Dates Liked by bf, gf, and Both')
             img2 = 'liked_by_venn.png'
-            plt.savefig(img2)
+            plt.savefig(img2, bbox_inches='tight')
             plt.close()
             img_paths.append(img2)
-        # 3. Bar chart: Total count of tags (sorted by count)
+        # 3. Bar chart: Total count of tags (sorted by count, horizontal)
         tag_counter = Counter()
         for entry in history:
             idea = idea_by_name.get(entry['activity_name'])
@@ -436,18 +477,18 @@ class VisualizationsScreen(Screen):
                 tag_counter.update(idea.tags)
         if tag_counter:
             tags, tag_counts = zip(*sorted(tag_counter.items(), key=lambda x: x[1], reverse=True))
-            plt.figure(figsize=(8, 4))
-            plt.bar(tags, tag_counts, color='orange')
+            plt.figure(figsize=(5, max(3, len(tags)*0.6)))
+            plt.barh(tags, tag_counts, color='orange')
             plt.title('Total Count of Tags (All Time)')
-            plt.ylabel('Count')
-            plt.xticks(rotation=45, ha='right')
-            plt.gca().yaxis.set_major_locator(ticker.MaxNLocator(integer=True))
+            plt.xlabel('Count')
+            plt.ylabel('Tag')
+            plt.gca().xaxis.set_major_locator(ticker.MaxNLocator(integer=True))
             plt.tight_layout()
             img3 = 'tag_counts.png'
-            plt.savefig(img3)
+            plt.savefig(img3, bbox_inches='tight')
             plt.close()
             img_paths.append(img3)
-        # 4. Bar chart: Money spent per person on dates per month
+        # 4. Bar chart: Money spent per person on dates per month (horizontal)
         month_spending = defaultdict(float)
         for entry in history:
             date_str = entry['date']
@@ -460,15 +501,17 @@ class VisualizationsScreen(Screen):
                 month_spending[month] += cost_per_person
         if month_spending:
             months, spend = zip(*sorted(month_spending.items()))
-            plt.figure(figsize=(8, 4))
-            plt.bar(months, spend, color='green')
+            plt.figure(figsize=(5, max(3, len(months)*0.6)))
+            plt.barh(months, spend, color='green')
             plt.title('Money Spent Per Person on Dates Per Month (₹)')
-            plt.ylabel('Total Spent Per Person (₹)')
-            plt.xticks(rotation=45, ha='right')
-            plt.gca().yaxis.set_major_locator(ticker.MaxNLocator(integer=True))
+            plt.xlabel('Total Spent Per Person (₹)')
+            plt.ylabel('Month')
+            # Only set integer ticks if all values are integers
+            if all(float(x).is_integer() for x in spend):
+                plt.gca().xaxis.set_major_locator(ticker.MaxNLocator(integer=True))
             plt.tight_layout()
             img4 = 'monthly_spending.png'
-            plt.savefig(img4)
+            plt.savefig(img4, bbox_inches='tight')
             plt.close()
             img_paths.append(img4)
         return img_paths
