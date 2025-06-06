@@ -20,6 +20,11 @@ class DateIdeaManager:
             ideas_data = json.load(f)
         return [DateIdea(**idea) for idea in ideas_data]
 
+    def _cost_per_person(self, idea, n_people):
+        if idea.cost_type == 'total':
+            return idea.cost / n_people if n_people else idea.cost
+        return idea.cost
+
     def sample_idea(self, liked_by: Optional[str] = None, location: Optional[str] = None, max_cost: Optional[float] = None, n_people: Optional[int] = None) -> Optional[DateIdea]:
         if n_people is None:
             raise ValueError("You must specify n_people (number of people) when sampling an idea.")
@@ -31,13 +36,7 @@ class DateIdeaManager:
         if location:
             filtered = [i for i in filtered if location in i.location]
         filtered = [i for i in filtered if n_people <= i.max_people]
-        def cost_filter(idea: DateIdea):
-            if idea.cost_type == 'total':
-                per_person_cost = idea.cost / n_people if n_people else idea.cost
-                return per_person_cost <= max_cost
-            else:  # 'per_person'
-                return idea.cost <= max_cost
-        filtered = [i for i in filtered if cost_filter(i)]
+        filtered = [i for i in filtered if self._cost_per_person(i, n_people) <= max_cost]
         if not filtered:
             return None
         return random.choice(filtered)
@@ -48,11 +47,7 @@ class DateIdeaManager:
             raise ValueError("Expected a DateIdea instance")
         if n_people is None:
             raise ValueError("n_people must be specified to record cost per person.")
-        # Calculate cost per person for this record
-        if idea.cost_type == 'total':
-            cost_per_person = idea.cost / n_people if n_people else idea.cost
-        else:
-            cost_per_person = idea.cost
+        cost_per_person = self._cost_per_person(idea, n_people)
         self.history.add_entry(idea.name, date, cost_per_person)  # Date is optional, will use current date if None
 
     def clear_history(self):
