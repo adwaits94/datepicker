@@ -1,0 +1,12 @@
+# micromamba environment file for Date Idea Picker
+name: datepicker_env
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - pip
+  - pip:
+      - matplotlib
+      - matplotlib-venn
+      - pandas
+# For Android integration, add kivy, briefcase, or chaquopy as needed

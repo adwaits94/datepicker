@@ -69,7 +69,7 @@
     "tags": ["fitness", "active", "game"],
     "cost": 200,
     "max_people": 4,
-    "cost_type": "per_person"
+    "cost_type": "total"
   },
   {
     "name": "Table Tennis",
@@ -94,7 +94,7 @@
     "liked_by": ["bf", "gf"],
     "location": ["outside"],
     "tags": ["game"],
-    "cost": 10,
+    "cost": 300,
     "max_people": 4,
     "cost_type": "per_person"
   },
@@ -112,25 +112,16 @@
     "liked_by": ["gf"],
     "location": ["outside"],
     "tags": ["creative"],
-    "cost": 15,
+    "cost": 1200,
     "max_people": 8,
     "cost_type": "per_person"
-  },
-  {
-    "name": "Climbing",
-    "liked_by": ["gf"],
-    "location": ["outside"],
-    "tags": ["active"],
-    "cost": 0,
-    "max_people": 4,
-    "cost_type": "total"
   },
   {
     "name": "Amusement Park",
     "liked_by": ["gf"],
     "location": ["outside"],
     "tags": ["adventure"],
-    "cost": 25,
+    "cost": 2000,
     "max_people": 20,
     "cost_type": "per_person"
   },
@@ -139,7 +130,7 @@
     "liked_by": ["gf"],
     "location": ["outside"],
     "tags": ["adventure"],
-    "cost": 20,
+    "cost": 1500,
     "max_people": 20,
     "cost_type": "per_person"
   },
@@ -166,7 +157,7 @@
     "liked_by": ["bf", "gf"],
     "location": ["home", "outside"],
     "tags": ["game"],
-    "cost": 100,
+    "cost": 150,
     "max_people": 4,
     "cost_type": "per_person"
   },
@@ -219,9 +210,9 @@
     "name": "Laser Tag",
     "liked_by": ["bf", "gf"],
     "location": ["outside"],
-    "tags": ["game", "active"],
-    "cost": 600,
-    "max_people": 20,
+    "tags": ["game"],
+    "cost": 890,
+    "max_people": 12,
     "cost_type": "per_person"
   },
   {
@@ -288,12 +279,12 @@
     "cost_type": "per_person"
   },
     {
-        "name": "Spa Day",
+        "name": "Trampoline Park",
         "liked_by": ["gf"],
         "location": ["outside"],
-        "tags": ["relaxing"],
-        "cost": 30,
-        "max_people": 4,
+        "tags": [],
+        "cost": 1090,
+        "max_people": 8,
         "cost_type": "per_person"
     },
     {
@@ -301,8 +292,26 @@
         "liked_by": ["bf", "gf"],
         "location": ["outside"],
         "tags": ["game"],
-        "cost": 10,
+        "cost": 412,
         "max_people": 4,
+        "cost_type": "total"
+    },
+    {
+        "name": "SkyJumper",
+        "liked_by": ["bf", "gf"],
+        "location": ["outside"],
+        "tags": ["game"],
+        "cost": 1790,
+        "max_people": 8,
         "cost_type": "per_person"
+    },
+    {
+        "name": "Shott Pune, KOPA",
+        "liked_by": ["bf", "gf"],
+        "location": ["outside"],
+        "tags": ["game"],
+        "cost": 1415,
+        "max_people": 8,
+        "cost_type": "total"
     }
 ]

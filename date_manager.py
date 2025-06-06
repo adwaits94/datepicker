@@ -3,6 +3,12 @@ import random
 from date_idea import DateIdea
 from date_history import DateHistory
 from typing import Optional, List
+import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
+from matplotlib_venn import venn2
+import pandas as pd
+from collections import Counter, defaultdict
+from datetime import datetime
 
 class DateIdeaManager:
     def __init__(self, ideas_file: str):
@@ -36,11 +42,18 @@ class DateIdeaManager:
             return None
         return random.choice(filtered)
 
-    def record_date(self, idea: DateIdea, date: Optional[str] = None):
+    def record_date(self, idea: DateIdea, date: Optional[str] = None, n_people: Optional[int] = None):
         """ Records a date idea in the history. """
         if not isinstance(idea, DateIdea):
             raise ValueError("Expected a DateIdea instance")
-        self.history.add_entry(idea.name, date)  # Date is optional, will use current date if None
+        if n_people is None:
+            raise ValueError("n_people must be specified to record cost per person.")
+        # Calculate cost per person for this record
+        if idea.cost_type == 'total':
+            cost_per_person = idea.cost / n_people if n_people else idea.cost
+        else:
+            cost_per_person = idea.cost
+        self.history.add_entry(idea.name, date, cost_per_person)  # Date is optional, will use current date if None
 
     def clear_history(self):
         """Clears the date history."""
@@ -108,3 +121,77 @@ class DateIdeaManager:
                 suggestions.append(f"Try more activities with tag: {', '.join(min_tags)}")
         stats['suggestions'] = suggestions
         return stats
+
+    def generate_visualizations(self):
+        """
+        Generates and displays the following visualizations (scrolling top to bottom):
+        1. Bar chart: Number of times each activity was done (sorted by count)
+        2. Venn Diagram: Percent of dates liked by bf, gf, and both
+        3. Bar chart: Total count of tags (sorted by count)
+        4. Bar chart: Money spent on dates per month
+        """
+        history = self.history.get_history()
+        if not history:
+            print("No history to visualize.")
+            return
+        # Helper: get DateIdea by name
+        idea_by_name = {idea.name: idea for idea in self.ideas}
+        # 1. Bar chart: Number of times each activity was done
+        activity_counts = Counter(entry['activity_name'] for entry in history)
+        activities, counts = zip(*sorted(activity_counts.items(), key=lambda x: x[1], reverse=True))
+        plt.figure(figsize=(8, 4))
+        plt.bar(activities, counts, color='skyblue')
+        plt.title('Number of Times Each Activity Was Done')
+        plt.ylabel('Count')
+        plt.xticks(rotation=45, ha='right')
+        plt.tight_layout()
+        plt.show()
+        # 2. Venn Diagram: Percent of dates liked by bf, gf, both
+        bf_set, gf_set = set(), set()
+        for entry in history:
+            idea = idea_by_name.get(entry['activity_name'])
+            if not idea:
+                continue
+            if 'bf' in idea.liked_by:
+                bf_set.add(entry['activity_name'] + entry['date'])
+            if 'gf' in idea.liked_by:
+                gf_set.add(entry['activity_name'] + entry['date'])
+        plt.figure(figsize=(6, 6))
+        venn2((bf_set, gf_set), set_labels=('bf', 'gf'))
+        plt.title('Percent of Dates Liked by bf, gf, and Both')
+        plt.show()
+        # 3. Bar chart: Total count of tags (sorted by count)
+        tag_counter = Counter()
+        for entry in history:
+            idea = idea_by_name.get(entry['activity_name'])
+            if idea:
+                tag_counter.update(idea.tags)
+        if tag_counter:
+            tags, tag_counts = zip(*sorted(tag_counter.items(), key=lambda x: x[1], reverse=True))
+            plt.figure(figsize=(8, 4))
+            plt.bar(tags, tag_counts, color='orange')
+            plt.title('Total Count of Tags (All Time)')
+            plt.ylabel('Count')
+            plt.xticks(rotation=45, ha='right')
+            plt.tight_layout()
+            plt.show()
+        # 4. Bar chart: Money spent per person on dates per month
+        month_spending = defaultdict(float)
+        for entry in history:
+            date_str = entry['date']
+            try:
+                month = datetime.strptime(date_str, "%Y-%m-%d").strftime("%Y-%m")
+            except Exception:
+                continue
+            cost_per_person = entry.get('cost_per_person')
+            if cost_per_person is not None:
+                month_spending[month] += cost_per_person
+        if month_spending:
+            months, spend = zip(*sorted(month_spending.items()))
+            plt.figure(figsize=(8, 4))
+            plt.bar(months, spend, color='green')
+            plt.title('Money Spent Per Person on Dates Per Month (₹)')
+            plt.ylabel('Total Spent Per Person (₹)')
+            plt.xticks(rotation=45, ha='right')
+            plt.tight_layout()
+            plt.show()
