@@ -18,6 +18,11 @@ class DateHistory:
     def get_history(self) -> List[Dict]:
         return self.history
 
-    def clear(self):
-        """Clears the history list."""
-        self.history.clear()
+    def clear(self, n: Optional[int] = None):
+        """
+        Clears the last n entries from the history. If n is None, clears all history.
+        """
+        if n is None:
+            self.history.clear()
+        else:
+            del self.history[-n:]
