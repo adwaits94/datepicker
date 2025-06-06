@@ -5,7 +5,7 @@ This project helps you manage, track, and analyze date ideas with customizable a
 ## Features
 - Store date ideas with attributes (liked by bf/gf/both, home/outside/both, tags, cost, and max_people)
 - Track which ideas are used and when
-- Analyze history to balance future suggestions (by person, location, tag, cost, and max_people)
+- Analyze history to balance future suggestions (by person, location, tag, cost, and n_people)
 - Filter and sample ideas by preferences, location, maximum cost, and group size
 - Easy configuration via JSON file
 - Modular code for future Android app backend

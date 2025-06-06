@@ -13,7 +13,7 @@ class DateIdeaManager:
             ideas_data = json.load(f)
         return [DateIdea(**idea) for idea in ideas_data]
 
-    def sample_idea(self, liked_by=None, location=None, max_cost=None, max_people=None):
+    def sample_idea(self, liked_by=None, location=None, max_cost=None, n_people=None):
         filtered = self.ideas
         if liked_by:
             filtered = [i for i in filtered if liked_by in i.liked_by]
@@ -21,8 +21,8 @@ class DateIdeaManager:
             filtered = [i for i in filtered if location in i.location]
         if max_cost is not None:
             filtered = [i for i in filtered if i.cost <= max_cost]
-        if max_people is not None:
-            filtered = [i for i in filtered if i.max_people >= max_people]
+        if n_people is not None:
+            filtered = [i for i in filtered if n_people < i.max_people]
         if not filtered:
             return None
         return random.choice(filtered)
