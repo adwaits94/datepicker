@@ -8,6 +8,7 @@ from kivy.uix.label import Label
 from kivy.uix.textinput import TextInput
 from kivy.uix.popup import Popup
 from kivy.uix.image import Image
+from kivy.uix.widget import Widget
 from kivy.core.window import Window
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.filechooser import FileChooserIconView
@@ -28,6 +29,7 @@ class MainMenuScreen(Screen):
         layout = BoxLayout(orientation='vertical', spacing=10, padding=20)
         layout.add_widget(Button(text='Sample Date Idea', size_hint_y=None, height=60, on_press=self.sample_idea))
         layout.add_widget(Button(text='Add Date Idea', size_hint_y=None, height=60, on_press=self.add_idea))
+        layout.add_widget(Button(text='View/Edit Date Ideas', size_hint_y=None, height=60, on_press=self.edit_ideas))
         layout.add_widget(Button(text='View History', size_hint_y=None, height=60, on_press=self.view_history))
         layout.add_widget(Button(text='Clear History', size_hint_y=None, height=60, on_press=self.clear_history))
         layout.add_widget(Button(text='Show Analysis', size_hint_y=None, height=60, on_press=self.show_analysis))
@@ -52,6 +54,9 @@ class MainMenuScreen(Screen):
     def show_visualizations(self, instance):
         self.manager.current = 'visualizations'
 
+    def edit_ideas(self, instance):
+        self.manager.current = 'edit_ideas'
+
 class SampleIdeaScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -75,7 +80,6 @@ class SampleIdeaScreen(Screen):
         self.form.add_widget(self.n_people_input)
         self.layout.add_widget(self.form)
         # Add a spacer to push the idea label and buttons down
-        from kivy.uix.widget import Widget
         self.layout.add_widget(Widget(size_hint_y=0.2))
         self.idea_label = Label(text='', size_hint_y=None, height=160)
         self.layout.add_widget(self.idea_label)
@@ -153,7 +157,7 @@ class SampleIdeaScreen(Screen):
         self.on_sample(instance)
 
     def on_cancel(self, instance):
-        self.manager.current = 'main'
+        self.manager.current = 'main_menu'
 
 class AddIdeaScreen(Screen):
     def __init__(self, **kwargs):
@@ -251,7 +255,7 @@ class AddIdeaScreen(Screen):
         self.cost_type_spinner.text = 'total'
 
     def on_cancel(self, instance):
-        self.manager.current = 'main'
+        self.manager.current = 'main_menu'
 
 class HistoryScreen(Screen):
     def __init__(self, **kwargs):
@@ -280,7 +284,7 @@ class HistoryScreen(Screen):
                 self.history_grid.add_widget(lbl)
 
     def go_back(self, instance):
-        self.manager.current = 'main'
+        self.manager.current = 'main_menu'
 
 class ClearHistoryScreen(Screen):
     def __init__(self, **kwargs):
@@ -321,7 +325,7 @@ class ClearHistoryScreen(Screen):
         self.status_label.text = f"History cleared{' (last ' + n_text + ' entries)' if n else ' (all)'}!"
 
     def go_back(self, instance):
-        self.manager.current = 'main'
+        self.manager.current = 'main_menu'
 
 class AnalysisScreen(Screen):
     def __init__(self, **kwargs):
@@ -362,7 +366,7 @@ class AnalysisScreen(Screen):
         self.update_label_size()
 
     def go_back(self, instance):
-        self.manager.current = 'main'
+        self.manager.current = 'main_menu'
 
 class VisualizationsScreen(Screen):
     def __init__(self, **kwargs):
@@ -517,18 +521,158 @@ class VisualizationsScreen(Screen):
         return img_paths
 
     def go_back(self, instance):
-        self.manager.current = 'main'
+        self.manager.current = 'main_menu'
+
+class EditIdeasScreen(Screen):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.manager_app = None
+        self.layout = BoxLayout(orientation='vertical', spacing=10, padding=20)
+        self.scroll = ScrollView(size_hint=(1, 1))
+        self.ideas_box = BoxLayout(orientation='vertical', size_hint_y=None, spacing=30, padding=[0, 0, 0, 20])
+        self.ideas_box.height = 0  # Will be set dynamically
+        self.scroll.add_widget(self.ideas_box)
+        self.layout.add_widget(self.scroll)
+        self.back_btn = Button(text='Back', size_hint_y=None, height=50, on_press=self.go_back)
+        self.layout.add_widget(self.back_btn)
+        self.status_label = Label(text='', size_hint_y=None, height=40)
+        self.layout.add_widget(self.status_label)
+        self.add_widget(self.layout)
+
+    def on_enter(self):
+        app = App.get_running_app()
+        self.manager_app = getattr(app, 'manager', None)
+        self.refresh_ideas()
+        self.scroll.scroll_y = 1
+
+    def refresh_ideas(self):
+        import json
+        self.ideas_box.clear_widgets()
+        try:
+            with open('ideas.json', 'r', encoding='utf-8') as f:
+                ideas = json.load(f)
+        except Exception:
+            ideas = []
+        total_height = 0
+        for idx, idea in enumerate(ideas):
+            editor = self._make_idea_editor(idea, idx, ideas)
+            self.ideas_box.add_widget(editor)
+            # Add a separator for clarity
+            if idx < len(ideas) - 1:
+                self.ideas_box.add_widget(Widget(size_hint_y=None, height=10))
+                total_height += 10
+            total_height += editor.height
+        self.ideas_box.height = max(1, total_height)
+
+    def _make_idea_editor(self, idea, idx, all_ideas):
+        from kivy.uix.boxlayout import BoxLayout
+        from kivy.uix.textinput import TextInput
+        from kivy.uix.spinner import Spinner
+
+        box = BoxLayout(orientation='vertical', spacing=6, padding=10, size_hint_y=None)
+        # Each field: label + input
+        fields = []
+
+        name_input = TextInput(text=idea.get('name', ''), multiline=False, size_hint_y=None, height=40)
+        fields.append((Label(text='Name:', size_hint_y=None, height=20), name_input))
+
+        liked_by_spinner = Spinner(
+            text=','.join(idea.get('liked_by', [])),
+            values=['bf', 'gf', 'both'],
+            size_hint_y=None, height=40
+        )
+        fields.append((Label(text='Liked By:', size_hint_y=None, height=20), liked_by_spinner))
+
+        location_spinner = Spinner(
+            text=','.join(idea.get('location', [])),
+            values=['home', 'outside', 'both'],
+            size_hint_y=None, height=40
+        )
+        fields.append((Label(text='Location:', size_hint_y=None, height=20), location_spinner))
+
+        tags_input = TextInput(text=','.join(idea.get('tags', [])), multiline=False, size_hint_y=None, height=40)
+        fields.append((Label(text='Tags:', size_hint_y=None, height=20), tags_input))
+
+        cost_input = TextInput(text=str(idea.get('cost', '')), input_filter='float', multiline=False, size_hint_y=None, height=40)
+        fields.append((Label(text='Cost:', size_hint_y=None, height=20), cost_input))
+
+        max_people_input = TextInput(text=str(idea.get('max_people', '')), input_filter='int', multiline=False, size_hint_y=None, height=40)
+        fields.append((Label(text='Max People:', size_hint_y=None, height=20), max_people_input))
+
+        cost_type_spinner = Spinner(
+            text=idea.get('cost_type', 'total'),
+            values=['total', 'per_person'],
+            size_hint_y=None, height=40
+        )
+        fields.append((Label(text='Cost Type:', size_hint_y=None, height=20), cost_type_spinner))
+
+        for label, widget in fields:
+            box.add_widget(label)
+            box.add_widget(widget)
+
+        status = Label(text='', size_hint_y=None, height=30)
+        def on_save(_):
+            new_idea = {
+                'name': name_input.text.strip(),
+                'liked_by': [liked_by_spinner.text] if liked_by_spinner.text != 'both' else ['bf', 'gf'],
+                'location': [location_spinner.text] if location_spinner.text != 'both' else ['home', 'outside'],
+                'tags': [t.strip() for t in tags_input.text.split(',') if t.strip()],
+                'cost': float(cost_input.text) if cost_input.text else 0.0,
+                'max_people': int(max_people_input.text) if max_people_input.text else 1,
+                'cost_type': cost_type_spinner.text
+            }
+            all_ideas[idx] = new_idea
+            try:
+                with open('ideas.json', 'w', encoding='utf-8') as f:
+                    import json
+                    json.dump(all_ideas, f, ensure_ascii=False, indent=2)
+                status.text = 'Saved!'
+            except Exception as e:
+                status.text = f'Error: {e}'
+            if self.manager_app:
+                self.manager_app.ideas = self.manager_app.load_ideas('ideas.json')
+        def on_delete(_):
+            del all_ideas[idx]
+            try:
+                with open('ideas.json', 'w', encoding='utf-8') as f:
+                    import json
+                    json.dump(all_ideas, f, ensure_ascii=False, indent=2)
+                status.text = 'Deleted!'
+            except Exception as e:
+                status.text = f'Error: {e}'
+            if self.manager_app:
+                self.manager_app.ideas = self.manager_app.load_ideas('ideas.json')
+            self.refresh_ideas()
+        save_btn = Button(text='Save Changes', size_hint_y=None, height=40, on_press=on_save)
+        delete_btn = Button(text='Delete', size_hint_y=None, height=40, on_press=on_delete)
+        btns = BoxLayout(orientation='horizontal', size_hint_y=None, height=40, spacing=10)
+        btns.add_widget(save_btn)
+        btns.add_widget(delete_btn)
+        box.add_widget(btns)
+        box.add_widget(status)
+        # Dynamically set height
+        box.height = 8*40 + 7*20 + 40 + 30 + 20  # 8 fields, 7 labels, buttons, status, padding
+        return box
+
+    def go_back(self, instance):
+        self.manager.current = 'main_menu'
+
 class DatePickerApp(App):
     def build(self):
-        self.manager = DateIdeaManager(IDEAS_FILE)
         sm = ScreenManager(transition=FadeTransition())
-        sm.add_widget(MainMenuScreen(name='main'))
+        # sm.app = self  # Remove this line, not needed
+        self.manager = DateIdeaManager(IDEAS_FILE)  # Use 'manager' for consistency
+        # Expose ideas and history for screens that expect them
+        self.ideas = self.manager.ideas
+        self.history = self.manager.history
+        sm.add_widget(MainMenuScreen(name='main_menu'))
         sm.add_widget(SampleIdeaScreen(name='sample'))
         sm.add_widget(AddIdeaScreen(name='add_idea'))
         sm.add_widget(HistoryScreen(name='history'))
         sm.add_widget(ClearHistoryScreen(name='clear_history'))
         sm.add_widget(AnalysisScreen(name='analysis'))
         sm.add_widget(VisualizationsScreen(name='visualizations'))
+        sm.add_widget(EditIdeasScreen(name='edit_ideas'))
         return sm
 
 if __name__ == '__main__':
