@@ -5,7 +5,8 @@
     "location": ["home"],
     "tags": ["relaxing"],
     "cost": 0,
-    "max_people": 15
+    "max_people": 15,
+    "cost_type": "total"
   },
   {
     "name": "Movie @ Theater",
@@ -13,7 +14,8 @@
     "location": ["outside"],
     "tags": [],
     "cost": 400,
-    "max_people": 50
+    "max_people": 50,
+    "cost_type": "per_person"
   },
   {
     "name": "Hiking",
@@ -21,7 +23,8 @@
     "location": ["home"],
     "tags": ["adventure", "active", "fitness"],
     "cost": 0,
-    "max_people": 30
+    "max_people": 30,
+    "cost_type": "total"
   },
   {
     "name": "Swimming",
@@ -29,15 +32,17 @@
     "location": ["outside"],
     "tags": ["active", "fitness"],
     "cost": 0,
-    "max_people": 30
+    "max_people": 30,
+    "cost_type": "per_person"
   },
   {
     "name": "Mystery Room",
     "liked_by": ["bf", "gf"],
     "location": ["outside"],
     "tags": ["creative", "puzzle"],
-    "cost": 20,
-    "max_people": 2
+    "cost": 2400,
+    "max_people": 10,
+    "cost_type": "total"
   },
   {
     "name": "Lifting",
@@ -45,7 +50,8 @@
     "location": ["outside"],
     "tags": ["active", "fitness"],
     "cost": 0,
-    "max_people": 4
+    "max_people": 4,
+    "cost_type": "total"
   },
   {
     "name": "Jogging",
@@ -53,7 +59,8 @@
     "location": ["outside"],
     "tags": ["fitness", "active"],
     "cost": 0,
-    "max_people": 4
+    "max_people": 4,
+    "cost_type": "total"
   },
   {
     "name": "Badminton",
@@ -61,7 +68,8 @@
     "location": ["outside"],
     "tags": ["fitness", "active", "game"],
     "cost": 5,
-    "max_people": 4
+    "max_people": 4,
+    "cost_type": "per_person"
   },
   {
     "name": "Table Tennis",
@@ -69,7 +77,8 @@
     "location": ["outside"],
     "tags": ["active", "game"],
     "cost": 5,
-    "max_people": 4
+    "max_people": 4,
+    "cost_type": "per_person"
   },
   {
     "name": "Pool",
@@ -77,7 +86,8 @@
     "location": ["outside"],
     "tags": ["active"],
     "cost": 10,
-    "max_people": 4
+    "max_people": 4,
+    "cost_type": "per_person"
   },
   {
     "name": "Arcade",
@@ -85,7 +95,8 @@
     "location": ["outside"],
     "tags": ["game"],
     "cost": 10,
-    "max_people": 2
+    "max_people": 4,
+    "cost_type": "per_person"
   },
   {
     "name": "Video Games",
@@ -93,7 +104,8 @@
     "location": ["home"],
     "tags": ["game"],
     "cost": 0,
-    "max_people": 2
+    "max_people": 2,
+    "cost_type": "total"
   },
   {
     "name": "Pottery",
@@ -101,7 +113,8 @@
     "location": ["outside"],
     "tags": ["creative"],
     "cost": 15,
-    "max_people": 2
+    "max_people": 8,
+    "cost_type": "per_person"
   },
   {
     "name": "Climbing",
@@ -109,7 +122,8 @@
     "location": ["outside"],
     "tags": ["active"],
     "cost": 0,
-    "max_people": 4
+    "max_people": 4,
+    "cost_type": "total"
   },
   {
     "name": "Amusement Park",
@@ -117,7 +131,8 @@
     "location": ["outside"],
     "tags": ["adventure"],
     "cost": 25,
-    "max_people": 4
+    "max_people": 20,
+    "cost_type": "per_person"
   },
   {
     "name": "Water Park",
@@ -125,7 +140,8 @@
     "location": ["outside"],
     "tags": ["adventure"],
     "cost": 20,
-    "max_people": 4
+    "max_people": 20,
+    "cost_type": "per_person"
   },
   {
     "name": "Karaoke @ Home",
@@ -133,71 +149,80 @@
     "location": ["home"],
     "tags": ["music"],
     "cost": 0,
-    "max_people": 2
+    "max_people": 15,
+    "cost_type": "total"
   },
   {
     "name": "Cooking",
     "liked_by": ["bf", "gf"],
     "location": ["home"],
     "tags": ["creative", "Food & Drink"],
-    "cost": 10,
-    "max_people": 2
+    "cost": 100,
+    "max_people": 15,
+    "cost_type": "per_person"
   },
   {
     "name": "Board Games",
     "liked_by": ["bf", "gf"],
     "location": ["home", "outside"],
     "tags": ["game"],
-    "cost": 5,
-    "max_people": 4
+    "cost": 100,
+    "max_people": 4,
+    "cost_type": "per_person"
   },
   {
     "name": "Bar Crawl",
     "liked_by": ["bf", "gf"],
     "location": ["outside"],
     "tags": ["Food & Drink"],
-    "cost": 15,
-    "max_people": 2
+    "cost": 900,
+    "max_people": 20,
+    "cost_type": "per_person"
   },
   {
     "name": "Clubbing",
     "liked_by": ["gf"],
     "location": ["outside"],
     "tags": [],
-    "cost": 20,
-    "max_people": 2
+    "cost": 1200,
+    "max_people": 20,
+    "cost_type": "per_person"
   },
   {
     "name": "Sightseeing",
     "liked_by": ["bf", "gf"],
     "location": ["outside"],
     "tags": ["adventure"],
-    "cost": 0,
-    "max_people": 4
+    "cost": 100,
+    "max_people": 20,
+    "cost_type": "total"
   },
   {
     "name": "Painting On Canvas",
     "liked_by": ["gf"],
     "location": ["home"],
     "tags": ["creative"],
-    "cost": 10,
-    "max_people": 2
+    "cost": 50,
+    "max_people": 20,
+    "cost_type": "per_person"
   },
   {
     "name": "Shopping",
     "liked_by": ["bf"],
     "location": ["outside"],
     "tags": [],
-    "cost": 0,
-    "max_people": 2
+    "cost": 2000,
+    "max_people": 20,
+    "cost_type": "per_person"
   },
   {
     "name": "Laser Tag",
     "liked_by": ["bf", "gf"],
     "location": ["outside"],
     "tags": ["game", "active"],
-    "cost": 15,
-    "max_people": 4
+    "cost": 600,
+    "max_people": 20,
+    "cost_type": "per_person"
   },
   {
     "name": "Skribbl",
@@ -205,55 +230,62 @@
     "location": ["home"],
     "tags": ["game", "creative"],
     "cost": 0,
-    "max_people": 2
+    "max_people": 8,
+    "cost_type": "total"
   },
   {
     "name": "Painting Bottles",
     "liked_by": ["bf", "gf"],
     "location": ["home"],
     "tags": ["creative"],
-    "cost": 10,
-    "max_people": 2
+    "cost": 30,
+    "max_people": 20,
+    "cost_type": "per_person"
   },
   {
     "name": "Coloring",
     "liked_by": ["gf"],
     "location": ["home"],
     "tags": ["creative"],
-    "cost": 5,
-    "max_people": 2
+    "cost": 0,
+    "max_people": 20,
+    "cost_type": "per_person"
   },
   {
     "name": "Paintball",
     "liked_by": ["gf", "bf"],
     "location": ["outside"],
     "tags": ["game", "active"],
-    "cost": 20,
-    "max_people": 4
+    "cost": 600,
+    "max_people": 20,
+    "cost_type": "per_person"
   },
   {
     "name": "Comedy Show",
     "liked_by": ["gf"],
     "location": ["outside"],
     "tags": [],
-    "cost": 10,
-    "max_people": 2
+    "cost": 400,
+    "max_people": 20,
+    "cost_type": "per_person"
   },
   {
     "name": "New Restaurant",
     "liked_by": ["bf"],
     "location": ["outside"],
     "tags": ["Food & Drink"],
-    "cost": 25,
-    "max_people": 10
+    "cost": 700,
+    "max_people": 10,
+    "cost_type": "per_person"
   },
   {
     "name": "Karaoke @ Bar",
     "liked_by": ["bf"],
     "location": ["outside"],
     "tags": ["music"],
-    "cost": 0,
-    "max_people": 2
+    "cost": 700,
+    "max_people": 20,
+    "cost_type": "per_person"
   },
     {
         "name": "Spa Day",
@@ -261,7 +293,8 @@
         "location": ["outside"],
         "tags": ["relaxing"],
         "cost": 30,
-        "max_people": 2
+        "max_people": 4,
+        "cost_type": "per_person"
     },
     {
         "name": "Bowling",
@@ -269,6 +302,7 @@
         "location": ["outside"],
         "tags": ["game"],
         "cost": 10,
-        "max_people": 4
+        "max_people": 4,
+        "cost_type": "per_person"
     }
 ]

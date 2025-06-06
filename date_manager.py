@@ -14,15 +14,23 @@ class DateIdeaManager:
         return [DateIdea(**idea) for idea in ideas_data]
 
     def sample_idea(self, liked_by=None, location=None, max_cost=None, n_people=None):
+        if n_people is None:
+            raise ValueError("You must specify n_people (number of people) when sampling an idea.")
+        if max_cost is None:
+            raise ValueError("You must specify max_cost when sampling an idea.")
         filtered = self.ideas
         if liked_by:
             filtered = [i for i in filtered if liked_by in i.liked_by]
         if location:
             filtered = [i for i in filtered if location in i.location]
-        if max_cost is not None:
-            filtered = [i for i in filtered if i.cost <= max_cost]
-        if n_people is not None:
-            filtered = [i for i in filtered if n_people < i.max_people]
+        filtered = [i for i in filtered if n_people <= i.max_people]
+        def cost_filter(idea):
+            if idea.cost_type == 'total':
+                per_person_cost = idea.cost / n_people if n_people else idea.cost
+                return per_person_cost <= max_cost
+            else:  # 'per_person'
+                return idea.cost <= max_cost
+        filtered = [i for i in filtered if cost_filter(i)]
         if not filtered:
             return None
         return random.choice(filtered)
