@@ -5,15 +5,15 @@
     "location": ["home"],
     "tags": ["relaxing"],
     "cost": 0,
-    "max_people": 2
+    "max_people": 15
   },
   {
     "name": "Movie @ Theater",
     "liked_by": ["bf"],
     "location": ["outside"],
     "tags": [],
-    "cost": 15,
-    "max_people": 2
+    "cost": 400,
+    "max_people": 50
   },
   {
     "name": "Hiking",
@@ -21,23 +21,15 @@
     "location": ["home"],
     "tags": ["adventure", "active", "fitness"],
     "cost": 0,
-    "max_people": 4
+    "max_people": 30
   },
   {
     "name": "Swimming",
     "liked_by": ["gf"],
     "location": ["outside"],
     "tags": ["active", "fitness"],
-    "cost": 10,
-    "max_people": 2
-  },
-  {
-    "name": "Lego Building",
-    "liked_by": ["gf"],
-    "location": ["outside"],
-    "tags": ["creative"],
-    "cost": 5,
-    "max_people": 2
+    "cost": 0,
+    "max_people": 30
   },
   {
     "name": "Mystery Room",
@@ -253,7 +245,7 @@
     "location": ["outside"],
     "tags": ["Food & Drink"],
     "cost": 25,
-    "max_people": 2
+    "max_people": 10
   },
   {
     "name": "Karaoke @ Bar",
