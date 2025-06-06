@@ -5,8 +5,10 @@ channels:
 dependencies:
   - python=3.11
   - pip
+  - kivy
+  - kivy-garden
   - pip:
       - matplotlib
       - matplotlib-venn
       - pandas
-# For Android integration, add kivy, briefcase, or chaquopy as needed
+# For Android integration, add briefcase, or chaquopy as needed
