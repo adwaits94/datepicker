@@ -2,18 +2,19 @@ import json
 import random
 from date_idea import DateIdea
 from date_history import DateHistory
+from typing import Optional, List
 
 class DateIdeaManager:
     def __init__(self, ideas_file: str):
-        self.ideas = self.load_ideas(ideas_file)
+        self.ideas: List[DateIdea] = self.load_ideas(ideas_file)
         self.history = DateHistory()
 
-    def load_ideas(self, ideas_file: str):
-        with open(ideas_file, 'r') as f:
+    def load_ideas(self, ideas_file: str) -> List[DateIdea]:
+        with open(ideas_file, 'r', encoding='utf-8') as f:
             ideas_data = json.load(f)
         return [DateIdea(**idea) for idea in ideas_data]
 
-    def sample_idea(self, liked_by=None, location=None, max_cost=None, n_people=None):
+    def sample_idea(self, liked_by: Optional[str] = None, location: Optional[str] = None, max_cost: Optional[float] = None, n_people: Optional[int] = None) -> Optional[DateIdea]:
         if n_people is None:
             raise ValueError("You must specify n_people (number of people) when sampling an idea.")
         if max_cost is None:
@@ -24,7 +25,7 @@ class DateIdeaManager:
         if location:
             filtered = [i for i in filtered if location in i.location]
         filtered = [i for i in filtered if n_people <= i.max_people]
-        def cost_filter(idea):
+        def cost_filter(idea: DateIdea):
             if idea.cost_type == 'total':
                 per_person_cost = idea.cost / n_people if n_people else idea.cost
                 return per_person_cost <= max_cost
@@ -35,7 +36,7 @@ class DateIdeaManager:
             return None
         return random.choice(filtered)
 
-    def record_date(self, idea: DateIdea, date=None):
+    def record_date(self, idea: DateIdea, date: Optional[str] = None):
         """ Records a date idea in the history. """
         if not isinstance(idea, DateIdea):
             raise ValueError("Expected a DateIdea instance")

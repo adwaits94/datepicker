@@ -67,7 +67,7 @@
     "liked_by": ["bf"],
     "location": ["outside"],
     "tags": ["fitness", "active", "game"],
-    "cost": 5,
+    "cost": 200,
     "max_people": 4,
     "cost_type": "per_person"
   },
@@ -76,7 +76,7 @@
     "liked_by": ["bf"],
     "location": ["outside"],
     "tags": ["active", "game"],
-    "cost": 5,
+    "cost": 0,
     "max_people": 4,
     "cost_type": "per_person"
   },
@@ -85,7 +85,7 @@
     "liked_by": ["bf"],
     "location": ["outside"],
     "tags": ["active"],
-    "cost": 10,
+    "cost": 0,
     "max_people": 4,
     "cost_type": "per_person"
   },
