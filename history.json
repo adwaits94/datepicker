@@ -1,0 +1,22 @@
+[
+  {
+    "activity_name": "Arcade",
+    "date": "2025-06-06",
+    "cost_per_person": 300
+  },
+  {
+    "activity_name": "Bowling",
+    "date": "2025-06-06",
+    "cost_per_person": 206.0
+  },
+  {
+    "activity_name": "Bowling",
+    "date": "2025-06-06",
+    "cost_per_person": 206.0
+  },
+  {
+    "activity_name": "Jogging",
+    "date": "2025-06-06",
+    "cost_per_person": 0.0
+  }
+]

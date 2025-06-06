@@ -56,14 +56,8 @@ class DateIdeaManager:
 
     def analyze(self):
         """
-        Returns analysis of history:
-        - Count by idea
-        - Count by liked_by (bf/gf)
-        - Count by location (home/outside)
-        - Count by tag
-        - Suggestions for balancing
+        Returns only suggestions for balancing activities.
         """
-        # Collect all possible values from self.ideas
         all_liked_by = set()
         all_locations = set()
         all_tags = set()
@@ -84,21 +78,15 @@ class DateIdeaManager:
             idea = next((i for i in self.ideas if i.name == entry['activity_name']), None)
             if not idea:
                 continue
-            # By idea
             stats['by_idea'][idea.name] += 1
-            # By liked_by
             for person in idea.liked_by:
                 stats['by_liked_by'][person] += 1
-            # By location
             for loc in idea.location:
                 stats['by_location'][loc] += 1
-            # By tag
             for tag in idea.tags:
                 stats['by_tag'][tag] += 1
             stats['total'] += 1
-        # Suggestions for balancing
         suggestions = []
-        # Suggest all attributes with the minimum count (ties included), consolidated by attribute
         if stats['by_location'] and len(stats['by_location']) > 1:
             min_count = min(stats['by_location'].values())
             min_locs = [loc for loc, count in stats['by_location'].items() if count == min_count]
@@ -114,8 +102,7 @@ class DateIdeaManager:
             min_tags = [tag for tag, count in stats['by_tag'].items() if count == min_count]
             if min_tags:
                 suggestions.append(f"Try more activities with tag: {', '.join(min_tags)}")
-        stats['suggestions'] = suggestions
-        return stats
+        return suggestions
 
     def generate_visualizations(self):
         """
@@ -139,6 +126,7 @@ class DateIdeaManager:
         plt.title('Number of Times Each Activity Was Done')
         plt.ylabel('Count')
         plt.xticks(rotation=45, ha='right')
+        plt.gca().yaxis.set_major_locator(ticker.MaxNLocator(integer=True))
         plt.tight_layout()
         plt.show()
         # 2. Venn Diagram: Percent of dates liked by bf, gf, both
@@ -168,6 +156,7 @@ class DateIdeaManager:
             plt.title('Total Count of Tags (All Time)')
             plt.ylabel('Count')
             plt.xticks(rotation=45, ha='right')
+            plt.gca().yaxis.set_major_locator(ticker.MaxNLocator(integer=True))
             plt.tight_layout()
             plt.show()
         # 4. Bar chart: Money spent per person on dates per month
@@ -188,5 +177,6 @@ class DateIdeaManager:
             plt.title('Money Spent Per Person on Dates Per Month (₹)')
             plt.ylabel('Total Spent Per Person (₹)')
             plt.xticks(rotation=45, ha='right')
+            plt.gca().yaxis.set_major_locator(ticker.MaxNLocator(integer=True))
             plt.tight_layout()
             plt.show()
