@@ -1,8 +1,10 @@
-# main_kivy.py
+# main.py
 # Kivy-based Android app entry point for DatePicker
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen, FadeTransition
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.spinner import Spinner
+
 from kivy.uix.button import Button
 from kivy.uix.label import Label
 from kivy.uix.textinput import TextInput
@@ -13,7 +15,7 @@ from kivy.core.window import Window
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.filechooser import FileChooserIconView
 from kivy.graphics.texture import Texture
-from kivy.clock import mainthread
+from kivy.clock import mainthread, Clock
 import os
 from date_manager import DateIdeaManager
 from kivy.uix.gridlayout import GridLayout
@@ -527,22 +529,28 @@ class EditIdeasScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.manager_app = None
-        self.layout = BoxLayout(orientation='vertical', spacing=10, padding=20)
+
+        # Main vertical layout
+        self.layout = BoxLayout(orientation='vertical', spacing=10, padding=10)
+        # Scrollable area for ideas
         self.scroll = ScrollView(size_hint=(1, 1))
-        self.ideas_box = BoxLayout(orientation='vertical', size_hint_y=None, spacing=30, padding=[0, 0, 0, 20])
-        self.ideas_box.height = 0  # Will be set dynamically
+        self.ideas_box = BoxLayout(orientation='vertical', size_hint_y=None, spacing=20, padding=[0, 0, 0, 20])
+        self.ideas_box.bind(minimum_height=self.ideas_box.setter('height'))
         self.scroll.add_widget(self.ideas_box)
         self.layout.add_widget(self.scroll)
+        # Back button at the bottom
         self.back_btn = Button(text='Back', size_hint_y=None, height=50, on_press=self.go_back)
         self.layout.add_widget(self.back_btn)
-        self.status_label = Label(text='', size_hint_y=None, height=40)
-        self.layout.add_widget(self.status_label)
         self.add_widget(self.layout)
 
     def on_enter(self):
         app = App.get_running_app()
         self.manager_app = getattr(app, 'manager', None)
         self.refresh_ideas()
+        # Ensure scroll is at the top after layout
+        Clock.schedule_once(lambda dt: self.scroll_to_top(), 0.1)
+
+    def scroll_to_top(self):
         self.scroll.scroll_y = 1
 
     def refresh_ideas(self):
@@ -553,64 +561,35 @@ class EditIdeasScreen(Screen):
                 ideas = json.load(f)
         except Exception:
             ideas = []
-        total_height = 0
         for idx, idea in enumerate(ideas):
             editor = self._make_idea_editor(idea, idx, ideas)
             self.ideas_box.add_widget(editor)
-            # Add a separator for clarity
-            if idx < len(ideas) - 1:
-                self.ideas_box.add_widget(Widget(size_hint_y=None, height=10))
-                total_height += 10
-            total_height += editor.height
-        self.ideas_box.height = max(1, total_height)
 
     def _make_idea_editor(self, idea, idx, all_ideas):
-        from kivy.uix.boxlayout import BoxLayout
-        from kivy.uix.textinput import TextInput
-        from kivy.uix.spinner import Spinner
-
         box = BoxLayout(orientation='vertical', spacing=6, padding=10, size_hint_y=None)
-        # Each field: label + input
-        fields = []
+        box.height = 8*40 + 7*20 + 40 + 30 + 20  # 8 fields, 7 labels, buttons, status, padding
 
         name_input = TextInput(text=idea.get('name', ''), multiline=False, size_hint_y=None, height=40)
-        fields.append((Label(text='Name:', size_hint_y=None, height=20), name_input))
-
         liked_by_spinner = Spinner(
             text=','.join(idea.get('liked_by', [])),
             values=['bf', 'gf', 'both'],
             size_hint_y=None, height=40
         )
-        fields.append((Label(text='Liked By:', size_hint_y=None, height=20), liked_by_spinner))
-
         location_spinner = Spinner(
             text=','.join(idea.get('location', [])),
             values=['home', 'outside', 'both'],
             size_hint_y=None, height=40
         )
-        fields.append((Label(text='Location:', size_hint_y=None, height=20), location_spinner))
-
         tags_input = TextInput(text=','.join(idea.get('tags', [])), multiline=False, size_hint_y=None, height=40)
-        fields.append((Label(text='Tags:', size_hint_y=None, height=20), tags_input))
-
         cost_input = TextInput(text=str(idea.get('cost', '')), input_filter='float', multiline=False, size_hint_y=None, height=40)
-        fields.append((Label(text='Cost:', size_hint_y=None, height=20), cost_input))
-
         max_people_input = TextInput(text=str(idea.get('max_people', '')), input_filter='int', multiline=False, size_hint_y=None, height=40)
-        fields.append((Label(text='Max People:', size_hint_y=None, height=20), max_people_input))
-
         cost_type_spinner = Spinner(
             text=idea.get('cost_type', 'total'),
             values=['total', 'per_person'],
             size_hint_y=None, height=40
         )
-        fields.append((Label(text='Cost Type:', size_hint_y=None, height=20), cost_type_spinner))
-
-        for label, widget in fields:
-            box.add_widget(label)
-            box.add_widget(widget)
-
         status = Label(text='', size_hint_y=None, height=30)
+
         def on_save(_):
             new_idea = {
                 'name': name_input.text.strip(),
@@ -631,6 +610,7 @@ class EditIdeasScreen(Screen):
                 status.text = f'Error: {e}'
             if self.manager_app:
                 self.manager_app.ideas = self.manager_app.load_ideas('ideas.json')
+
         def on_delete(_):
             del all_ideas[idx]
             try:
@@ -643,15 +623,30 @@ class EditIdeasScreen(Screen):
             if self.manager_app:
                 self.manager_app.ideas = self.manager_app.load_ideas('ideas.json')
             self.refresh_ideas()
+
         save_btn = Button(text='Save Changes', size_hint_y=None, height=40, on_press=on_save)
         delete_btn = Button(text='Delete', size_hint_y=None, height=40, on_press=on_delete)
         btns = BoxLayout(orientation='horizontal', size_hint_y=None, height=40, spacing=10)
         btns.add_widget(save_btn)
         btns.add_widget(delete_btn)
+
+        # Add fields and labels in order
+        box.add_widget(Label(text='Name:', size_hint_y=None, height=20))
+        box.add_widget(name_input)
+        box.add_widget(Label(text='Liked By:', size_hint_y=None, height=20))
+        box.add_widget(liked_by_spinner)
+        box.add_widget(Label(text='Location:', size_hint_y=None, height=20))
+        box.add_widget(location_spinner)
+        box.add_widget(Label(text='Tags:', size_hint_y=None, height=20))
+        box.add_widget(tags_input)
+        box.add_widget(Label(text='Cost:', size_hint_y=None, height=20))
+        box.add_widget(cost_input)
+        box.add_widget(Label(text='Max People:', size_hint_y=None, height=20))
+        box.add_widget(max_people_input)
+        box.add_widget(Label(text='Cost Type:', size_hint_y=None, height=20))
+        box.add_widget(cost_type_spinner)
         box.add_widget(btns)
         box.add_widget(status)
-        # Dynamically set height
-        box.height = 8*40 + 7*20 + 40 + 30 + 20  # 8 fields, 7 labels, buttons, status, padding
         return box
 
     def go_back(self, instance):

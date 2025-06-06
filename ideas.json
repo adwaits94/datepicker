@@ -20,7 +20,7 @@
   {
     "name": "Hiking",
     "liked_by": ["bf"],
-    "location": ["home"],
+    "location": ["outside"],
     "tags": ["adventure", "active", "fitness"],
     "cost": 0,
     "max_people": 30,
