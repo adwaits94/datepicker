@@ -42,8 +42,6 @@ This project helps you manage, track, and analyze date ideas with customizable a
    ```bash
    python main.py
    ```
-   (or `python main_kivy.py` if you haven't renamed it)
-
 ---
 
 ## Example Usage (Python API)
@@ -63,27 +61,8 @@ print(idea)
 
 ---
 
-## Android APK Packaging
-
-1. **Use WSL/Ubuntu** (Buildozer does not work on Windows natively).
-2. Install dependencies (see [Kivy docs](https://kivy.org/doc/stable/guide/packaging-android.html)).
-3. Copy your project to WSL.
-4. In your project folder:
-   ```bash
-   buildozer init
-   # Edit buildozer.spec: set requirements (kivy, matplotlib, matplotlib-venn), include .json files, etc.
-   buildozer -v android debug
-   ```
-5. The APK will be in the `bin/` directory. Install it on your device or use:
-   ```bash
-   buildozer android deploy run
-   ```
-
----
-
 ## Tips
 
-- **For Android:** Rename or copy your Kivy app file to `main.py` before building.
 - **All data** is stored in `ideas.json` and `history.json` in the app directory.
 - **Edit/View Ideas:** Use the in-app "View/Edit Date Ideas" screen to update or delete ideas.
 
@@ -95,9 +74,6 @@ print(idea)
 - Improved mobile UI/UX
 - Cloud sync or sharing
 - Session sharing between bf and gf
+- Android App
 
 ---
-
-## License
-
-MIT License
