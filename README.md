@@ -1,6 +1,6 @@
 # Date Idea Picker
 
-This project helps you manage, track, and analyze date ideas with customizable attributes. It features a Kivy-based graphical interface for desktop and Android (via Buildozer).
+This project helps you manage, track, and analyze date ideas with customizable attributes. It features a Kivy-based graphical interface for desktop.
 
 ---
 
@@ -19,8 +19,7 @@ This project helps you manage, track, and analyze date ideas with customizable a
 - **Analysis**: Suggestions for balancing activities by person, location, or tag
 - **Visualizations**: Bar charts and Venn diagrams for activity counts, tags, liked by, and spending
 - **Edit or delete** any idea
-- **Android APK packaging** via Buildozer
-
+  
 ---
 
 ## Structure
